@@ -1,0 +1,6 @@
+# JMeter generated Header file
+User-Agent	Dalvik/1.6.0 (Linux; U; Android 4.0.3; Full AOSP on Maguro Build/IML74K) INQCloudAndroidSDK
+X-API-Key	cloud_key
+X-API-Timestamp	20120505T235558-0700
+X-API-Signature	0c4f0ccc1fcb3def1bcfe6da779c86112ddd3595b42c565cb9d2189c0e456dc1
+Authentication	oauth2 inqcloud 4602ec35-02f8-4987-90bc-84f4cf6b2b10

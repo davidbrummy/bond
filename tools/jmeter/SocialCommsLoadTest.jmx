@@ -1,0 +1,2988 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.2">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Social Comms Load Test" enabled="true">
+      <stringProp name="TestPlan.comments">Test the basic functionality of the INQCloud under load from Social Messaging traffic</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Setup Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="CLOUD_SERVER" elementType="Argument">
+            <stringProp name="Argument.name">CLOUD_SERVER</stringProp>
+            <stringProp name="Argument.value">qa.env.inqlabs.com</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">Server under test</stringProp>
+          </elementProp>
+          <elementProp name="user_1" elementType="Argument">
+            <stringProp name="Argument.name">user_1</stringProp>
+            <stringProp name="Argument.value">User1</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="User1.token" elementType="Argument">
+            <stringProp name="Argument.name">User1.token</stringProp>
+            <stringProp name="Argument.value">2f1573c5-9b39-4430-98ca-8b6898a9928c</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="User1.notification_1" elementType="Argument">
+            <stringProp name="Argument.name">User1.notification_1</stringProp>
+            <stringProp name="Argument.value">4fa82381e4b066374622b232</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+        <stringProp name="TestPlan.comments">Define the server to test against and the users and notifications to work with</stringProp>
+      </Arguments>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Sanity Check" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Make sure variables are set up correctly</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Light Load" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">stoptest</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">20</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">25</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Normal Load</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">200</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Extreme Spike" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">200</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">This should represent what it&apos;s like when the servers get a massive spike.</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">8</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Sanity Check" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Make sure variables are set up correctly</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Heavy Load" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">stoptest</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">20</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Peak traffic</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">200</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Sanity Check" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Make sure variables are set up correctly</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Extreme Load" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">20</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">200</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">This should represent what it&apos;s like when the servers get overloaded.</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Sanity Check" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Make sure variables are set up correctly</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Meltdown" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">20</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1000</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Try to melt the server.</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Sanity Check" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptestnow</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Make sure variables are set up correctly</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Limit Test" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1000</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">60</stringProp>
+        <longProp name="ThreadGroup.start_time">1336078383000</longProp>
+        <longProp name="ThreadGroup.end_time">1336078383000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Attemp to find the maximum number of threads the server can take without an error.</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Test Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="delay" elementType="Argument">
+              <stringProp name="Argument.name">delay</stringProp>
+              <stringProp name="Argument.value">2</stringProp>
+              <stringProp name="Argument.desc">Delay between samples</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach User" enabled="true">
+          <stringProp name="ForeachController.inputVal">user</stringProp>
+          <stringProp name="ForeachController.returnVal">userPrefix</stringProp>
+          <boolProp name="ForeachController.useSeparator">true</boolProp>
+        </ForeachController>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="token" elementType="Argument">
+                <stringProp name="Argument.name">token</stringProp>
+                <stringProp name="Argument.value">${userPrefix}.token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="Argument.desc">This user&apos;s OAuth Token</stringProp>
+              </elementProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">Initialize the variables use by this user</stringProp>
+          </Arguments>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Basic Test Loop" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">1</stringProp>
+          </LoopController>
+          <hashTree>
+            <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Set Directory POST" enabled="true">
+              <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="Label" elementType="Argument">
+                    <stringProp name="Argument.name">Label</stringProp>
+                    <stringProp name="Argument.value">Set Directory for ${userPrefix}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="INQServer" elementType="Argument">
+                    <stringProp name="Argument.name">INQServer</stringProp>
+                    <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Request-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Request-Timeout</stringProp>
+                    <stringProp name="Argument.value">60000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="Read-Timeout" elementType="Argument">
+                    <stringProp name="Argument.name">Read-Timeout</stringProp>
+                    <stringProp name="Argument.value">5000</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="OAuthValue" elementType="Argument">
+                    <stringProp name="Argument.name">OAuthValue</stringProp>
+                    <stringProp name="Argument.value">${token}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="ServerPath" elementType="Argument">
+                    <stringProp name="Argument.name">ServerPath</stringProp>
+                    <stringProp name="Argument.value">/api/v1/users/self/directory/</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="POSTData" elementType="Argument">
+                    <stringProp name="Argument.name">POSTData</stringProp>
+                    <stringProp name="Argument.value">{&quot;people&quot;:[{&quot;lastName&quot;:&quot;Tiny Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003371828806&quot;},&quot;directoryId&quot;:&quot;10&quot;},{&quot;lastName&quot;:&quot;Aaron Cooley&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;544774119&quot;},&quot;directoryId&quot;:&quot;1&quot;},{&quot;lastName&quot;:&quot;Yan Rao&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003218863318&quot;},&quot;directoryId&quot;:&quot;7&quot;},{&quot;lastName&quot;:&quot;John Lin&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100001871673689&quot;},&quot;directoryId&quot;:&quot;6&quot;},{&quot;lastName&quot;:&quot;Sally Hammerman&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;1300491817&quot;},&quot;directoryId&quot;:&quot;5&quot;},{&quot;lastName&quot;:&quot;SueInq McGarry&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003727344095&quot;},&quot;directoryId&quot;:&quot;15&quot;},{&quot;lastName&quot;:&quot;Cooper Dunn&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003359198875&quot;},&quot;directoryId&quot;:&quot;9&quot;},{&quot;lastName&quot;:&quot;Jasmit Kochhar&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003792904825&quot;},&quot;directoryId&quot;:&quot;16&quot;},{&quot;lastName&quot;:&quot;RobInq BlairInq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003283444808&quot;},&quot;directoryId&quot;:&quot;8&quot;},{&quot;lastName&quot;:&quot;Belay Cooley-Nguyen&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003505594367&quot;},&quot;directoryId&quot;:&quot;13&quot;},{&quot;lastName&quot;:&quot;Shawn Inq&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003692247787&quot;},&quot;directoryId&quot;:&quot;14&quot;},{&quot;lastName&quot;:&quot;Poppy Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003398257171&quot;},&quot;directoryId&quot;:&quot;11&quot;},{&quot;lastName&quot;:&quot;Bella Dogma&quot;,&quot;socialIdentities&quot;:{&quot;facebook&quot;:&quot;100003405008236&quot;},&quot;directoryId&quot;:&quot;12&quot;}]} </stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="classname">com.inqmobile.jmeter.SimplePost</stringProp>
+            </JavaSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Get Notification Loop" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Loop pulling data from the INQCloud</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
+            <hashTree>
+              <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="ForEach Notification" enabled="true">
+                <stringProp name="ForeachController.inputVal">${userPrefix}.notification</stringProp>
+                <stringProp name="ForeachController.returnVal">notificationOutput</stringProp>
+                <boolProp name="ForeachController.useSeparator">true</boolProp>
+              </ForeachController>
+              <hashTree>
+                <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Get Notification" enabled="true">
+                  <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="Label" elementType="Argument">
+                        <stringProp name="Argument.name">Label</stringProp>
+                        <stringProp name="Argument.value">Get notification ${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="INQServer" elementType="Argument">
+                        <stringProp name="Argument.name">INQServer</stringProp>
+                        <stringProp name="Argument.value">${CLOUD_SERVER}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Request-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Request-Timeout</stringProp>
+                        <stringProp name="Argument.value">60000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="Read-Timeout" elementType="Argument">
+                        <stringProp name="Argument.name">Read-Timeout</stringProp>
+                        <stringProp name="Argument.value">5000</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="OAuthValue" elementType="Argument">
+                        <stringProp name="Argument.name">OAuthValue</stringProp>
+                        <stringProp name="Argument.value">${token}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="ServerPath" elementType="Argument">
+                        <stringProp name="Argument.name">ServerPath</stringProp>
+                        <stringProp name="Argument.value">/api/v1/notifications/self/${notificationOutput}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <stringProp name="classname">com.inqmobile.jmeter.SimpleGet</stringProp>
+                </JavaSampler>
+                <hashTree/>
+                <TestAction guiclass="TestActionGui" testclass="TestAction" testname="delay" enabled="true">
+                  <intProp name="ActionProcessor.action">1</intProp>
+                  <intProp name="ActionProcessor.target">0</intProp>
+                  <stringProp name="ActionProcessor.duration">${delay}</stringProp>
+                </TestAction>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">true</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="DistributionGraphVisualizer" testclass="ResultCollector" testname="Distribution Graph (alpha)" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="SplineVisualizer" testclass="ResultCollector" testname="Spline Visualizer" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sampleCount>true</sampleCount>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

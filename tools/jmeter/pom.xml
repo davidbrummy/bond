@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>INQCloudLoadTest</groupId>
+	<artifactId>INQCloudLoadTest</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need -->
+            <phase>install</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>apache-jmeter-2.6/lib/ext</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>target</directory>
+                  <includes>
+                    <include>*.jar</include>
+                  </includes>    
+                  <filtering>true</filtering>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>
+<!--       <plugin> -->
+<!--         <groupId>org.codehaus.mojo</groupId> -->
+<!--         <artifactId>truezip-maven-plugin</artifactId> -->
+<!--         <version>1.0-beta-6</version> -->
+<!--         <executions> -->
+<!--           <execution> -->
+<!--             <id>copy-out-files</id> -->
+<!--             <goals> -->
+<!--               <goal>copy</goal> -->
+<!--             </goals> -->
+<!--             <phase>package</phase> -->
+<!--             <configuration> -->
+<!--               <files> -->
+<!--                 <file> -->
+<!--                   <source>apache-jmeter-2.6.tgz</source> -->
+<!--                   <outputDirectory>.</outputDirectory> -->
+<!--                 </file> -->
+<!--               </files> -->
+<!--             </configuration> -->
+<!--           </execution> -->
+<!--          </executions> -->
+<!--       </plugin> -->
+    </plugins>
+ 	</build>
+	<dependencies>
+	</dependencies>
+
+
+</project>
